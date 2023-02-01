@@ -38,19 +38,14 @@ plcourse = (idf[
     .sort_values(by='course_id')
 )
 
-
 # execute the query for registered students
 query_registered = "SELECT COUNT(DISTINCT u.id) AS 'Number of Students' FROM mdl_user u"
 result_registered = pd.read_sql(query_registered, engine)
-# print(type(result_registered['Number of Students'].iloc[0]))
 
 # execute the query for enrolled students
 query_enrolled = "SELECT COUNT(DISTINCT ue.userid) AS 'Number of Enrolled Students' FROM mdl_user_enrolments ue"
 result_enrolled = pd.read_sql(query_enrolled, engine)#.to_string(index=False)
 
-# query_lessons = "SELECT COUNT(h.id) AS num_of_lessons FROM mdl_course c JOIN mdl_hvp h ON h.course = c.id GROUP BY c.fullname;"
-# result_lessons = pd.read_sql(query_lessons, engine)
-#execute the query for not enrolled students
 query_not_enrolled = "SELECT COUNT(DISTINCT u.id) AS 'Number of not Enrolled Students' FROM mdl_user u WHERE u.id NOT IN (SELECT DISTINCT ue.userid FROM mdl_user_enrolments ue)"
 result_not_enrolled = pd.read_sql(query_not_enrolled, engine)#.to_string(index=False)
 
@@ -71,9 +66,6 @@ WHERE u.deleted = 0 AND u.suspended = 1 OR e.status = 1
 """
 result_inactive = pd.read_sql(query_inactive, engine)#.to_string(index=False)
 
-# create a new card with the query results
-# card = pn.Card(pn.indicators.String(value=result_registered, name='Registered Student'),
-#                background='#17A589', hide_header=True, width=200)
 card = pn.Card(
     pn.indicators.Number(value=result_registered['Number of Students'].iloc[0], default_color='white',
                             name='Registered', format='{value}', font_size='45pt'),
@@ -109,37 +101,16 @@ card5 = pn.Card(
                   hide_header=True,
                   width=160
               )
-# card2 = pn.Card(result_enrolled,background='#884EA0', width=200)
-# card3 = pn.Card(result_not_enrolled,background='#F5B041', width=200)
-# card4 = pn.Card(result_inactive,background='#E74C3C', width=200)
-
-# card.extend(result_enrolled)
-# card.extend(result_not_enrolled)
-# card.extend(result_inactive)
 
 
 # Create a bar chart of student count per course
-# barchart = df.hvplot.bar(x='course_name', y='student_count', title='Number of students per course', rot=90)
 barchart = df.hvplot.bar(x='course_id', y='student_count', title = 'Number of students per course')
 
 # Create a table with more detailed information
-# table = pn.widgets.DataFrame(df, layout='fit_columns')
-# table = pn.pane.DataFrame(df, width=800, escape=False, index=False)
 table = pn.pane.DataFrame(df, width=800, escape=False, index=False, theme='fast')
 
 itable = plcourse.pipe(pn.widgets.Tabulator, pagination='remote', page_size=10, theme='fast')
 
-# Card of students
-# card = pn.Card(
-#     "Number of registered students: {}".format(df2['Number_of_registered_student'].to_string(index=False)),
-#     background='#F5B041', width=500
-# )
-
-# # Create a Panel
-# panel = pn.panel(col, template=pn.template.FastListTemplate)
-#
-# # Show the panel
-# panel.show()
 
 template = pn.template.FastListTemplate(
     site="Cassmile", title="Student-Courses Analysis",
