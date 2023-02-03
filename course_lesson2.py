@@ -45,6 +45,7 @@ enrollment_plot = df_courses_enrollments.hvplot.bar(x='shortname', y='num_enroll
                                                     color='shortname', cmap='Category20',
                                                     title="Number of Students Enrolled in Each Course")
 
+
 # 3) number of lessons (h5p) in each course
 df_courses_h5p = pd.read_sql_query('''
     SELECT c.fullname AS course_name, c.shortname, COUNT(l.id) AS num_h5p
@@ -123,6 +124,7 @@ template = pn.template.FastListTemplate(
         # )
     ),
     # pn.Row(df_courses_enrollments.hvplot.bar(x='fullname', y='id_enrollments', height=400))
+    # pn.Row(plt.gcf()),
     pn.Row(enrollment_plot),
     pn.Row(h5p_plot),
     pn.Row(badges_plot),
