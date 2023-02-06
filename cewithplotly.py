@@ -18,8 +18,8 @@ date_range = df["log_date"].unique()
 start_date = min(date_range)
 end_date = max(date_range)
 
-print(start_date)
-print(end_date)
+# print(start_date)
+# print(end_date)
 
 # Create a plotly line chart to display the login data
 fig = px.line(df, x='log_date', y='log_count', title='User Login Activity')
